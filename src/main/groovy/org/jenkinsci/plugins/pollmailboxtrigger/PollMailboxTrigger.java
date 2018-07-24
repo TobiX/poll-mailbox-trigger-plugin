@@ -27,6 +27,7 @@ import hudson.util.Secret;
 import hudson.util.StreamTaskListener;
 import jenkins.model.Jenkins;
 import org.apache.commons.jelly.XMLOutput;
+import org.jenkinsci.Symbol;
 import org.jenkinsci.lib.xtrigger.XTriggerCause;
 import org.jenkinsci.lib.xtrigger.XTriggerDescriptor;
 import org.jenkinsci.lib.xtrigger.XTriggerException;
@@ -415,6 +416,18 @@ public class PollMailboxTrigger extends AbstractTriggerExt {
         this.attachments = attachments;
     }
 
+    public String getCronTabSpec() {
+        return spec;
+    }
+
+    public LabelRestrictionClass getLabelRestriction() {
+        if (isLabelRestriction()) {
+            return new LabelRestrictionClass(getTriggerLabel());
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public Collection<? extends Action> getProjectActions() {
         PollMailboxTriggerAction action = new InternalPollMailboxTriggerAction(getDescriptor().getDisplayName());
@@ -554,6 +567,7 @@ public class PollMailboxTrigger extends AbstractTriggerExt {
     }
 
     @Extension
+    @Symbol("pollMailbox")
     @SuppressWarnings("unused")
     public static class PollMailboxTriggerDescriptor extends XTriggerDescriptor {
 
